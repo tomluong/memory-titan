@@ -4,6 +4,7 @@ import "./styles.css";
 import Card from "./components/card/card";
 
 export default function App() {
+  const [cardOne, setCardOne] = React.useState("");
   let imgSrcs = [];
   for (let i = 0; i < 5; i++) {
     imgSrcs.push("https://loremflickr.com/200/200?v=" + i);
@@ -15,6 +16,17 @@ export default function App() {
     imgSrcs[i] = imgSrcs[j];
     imgSrcs[j] = temp;
   }
+
+  // const validate = () => {
+  //   if (cardOne !== "") {
+  //     if (imgSrc === cardOne) {
+  //       console.log("matched");
+  //     }
+  //     setCardOne("");
+  //   } else {
+  //     setCardOne(imgSrc);
+  //   }
+  // };
   return (
     <div className="App">
       <h1>Memory Titan</h1>

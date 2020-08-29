@@ -1,9 +1,12 @@
 .App {
   font-family: sans-serif;
-  text-align: center;
+  margin: auto;
+  width: 1100px;
 }
 .cards {
   display: flex;
+
+  flex-wrap: wrap;
 }
 
 .flip-card {
