@@ -4,8 +4,12 @@ import "./card.css";
 export default function Card(props) {
   const [turned, setTurned] = React.useState("");
   const toggle = () => {
-    if (turned === "" || turned === "unturned") setTurned("turned");
-    else {
+    console.log("inactive " + props.inactive);
+    if (props.inactive) return;
+    if (turned === "" || turned === "unturned") {
+      props.onTurned(props.imgSrc);
+      setTurned("turned");
+    } else {
       setTurned("unturned");
     }
   };

@@ -4,9 +4,11 @@ import "./styles.css";
 import Card from "./components/card/card";
 
 export default function App() {
-  const [cardOne, setCardOne] = React.useState("");
+  let turnedCard = "";
   let imgSrcs = [];
-  for (let i = 0; i < 5; i++) {
+  const [completedCard, setCompleteCard] = React.useState({});
+  const imageCount = 5;
+  for (let i = 0; i < imageCount; i++) {
     imgSrcs.push("https://loremflickr.com/200/200?v=" + i);
     imgSrcs.push("https://loremflickr.com/200/200?v=" + i);
   }
@@ -17,22 +19,33 @@ export default function App() {
     imgSrcs[j] = temp;
   }
 
-  // const validate = () => {
-  //   if (cardOne !== "") {
-  //     if (imgSrc === cardOne) {
-  //       console.log("matched");
-  //     }
-  //     setCardOne("");
-  //   } else {
-  //     setCardOne(imgSrc);
-  //   }
-  // };
+  const validate = (id) => {
+    console.log("validate card: " + id);
+
+    if (turnedCard === "") {
+      turnedCard = id;
+    } else {
+      if (turnedCard === id) {
+        console.log("matched");
+        let temp = {};
+        temp[id] = true;
+        setCompleteCard(Object.assign(temp, completedCard));
+      } else {
+        console.log("not matched");
+      }
+    }
+  };
   return (
     <div className="App">
       <h1>Memory Titan</h1>
       <div className="cards">
-        {imgSrcs.map((x) => (
-          <Card imgSrc={x} />
+        {imgSrcs.map((x, index) => (
+          <Card
+            key={x + index}
+            imgSrc={x}
+            onTurned={validate}
+            inactive={completedCard[x]}
+          />
         ))}
       </div>
     </div>
