@@ -37,7 +37,7 @@ export default function App() {
 
     setImages(newImages);
 
-    let turnedImages = newImages.filter((x) => x.turned);
+    let turnedImages = newImages.filter((x) => x.turned && !x.matched);
     console.log(turnedImages);
 
     if (turnedImages.length === 2) {
