@@ -32,9 +32,33 @@ export default function App() {
 
     let newImages = [...images];
     let image = newImages.filter((x) => x.id === imgId)[0];
+    if (image.matched) return;
     image.turned = !image.turned;
 
     setImages(newImages);
+
+    let turnedImages = newImages.filter((x) => x.turned);
+    console.log(turnedImages);
+
+    if (turnedImages.length === 2) {
+      console.log("validate them");
+      let matched = turnedImages[0].url === turnedImages[1].url;
+
+      if (matched) {
+        console.log("matched. do something");
+        turnedImages.forEach((x) => (x.matched = true));
+      } else {
+        console.log("not matched. flip them back");
+        //
+        //setImages(newImages);
+        setTimeout(() => {
+          let clean = [...images];
+          let noMatchImages = clean.filter((x) => x.turned && !x.matched);
+          noMatchImages.turned = false;
+          setImages(clean);
+        }, 1000);
+      }
+    }
 
     // let image = newImages.filter((x) => x.url === id)[0];
     // image.turned = true;
@@ -63,12 +87,14 @@ export default function App() {
       imgSrcs.push({
         id: uuidv4(),
         url: "https://loremflickr.com/200/200?v=" + i,
-        turned: false
+        turned: false,
+        matched: false
       });
       imgSrcs.push({
         id: uuidv4(),
         url: "https://loremflickr.com/200/200?v=" + i,
-        turned: false
+        turned: false,
+        matched: false
       });
     }
 
