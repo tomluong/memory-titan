@@ -1,53 +1,83 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./styles.css";
+import { v4 as uuidv4 } from "uuid";
 
 import Card from "./components/card/card";
 
 export default function App() {
-  let turnedCard = "";
-  let imgSrcs = [];
-  const [completedCard, setCompleteCard] = React.useState({});
-  const imageCount = 5;
-  for (let i = 0; i < imageCount; i++) {
-    imgSrcs.push("https://loremflickr.com/200/200?v=" + i);
-    imgSrcs.push("https://loremflickr.com/200/200?v=" + i);
-  }
-  for (let i = imgSrcs.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * i);
-    const temp = imgSrcs[i];
-    imgSrcs[i] = imgSrcs[j];
-    imgSrcs[j] = temp;
-  }
+  const [images, setImages] = useState([]);
+  useEffect(() => {
+    generateImageSources();
+  }, []);
 
-  const validate = (id) => {
-    console.log("validate card: " + id);
+  // const validate = (id) => {
+  //   console.log("validate card: " + id);
 
-    if (turnedCard === "") {
-      turnedCard = id;
-    } else {
-      if (turnedCard === id) {
-        console.log("matched");
-        let temp = {};
-        temp[id] = true;
-        setCompleteCard(Object.assign(temp, completedCard));
-      } else {
-        console.log("not matched");
-      }
-    }
+  //   if (turnedCard === "") {
+  //     turnedCard = id;
+  //   } else {
+  //     if (turnedCard === id) {
+  //       console.log("matched");
+  //       let temp = {};
+  //       temp[id] = true;
+  //       setCompleteCard(Object.assign(temp, completedCard));
+  //     } else {
+  //       console.log("not matched");
+  //     }
+  //   }
+  // };
+
+  const onTurned = (imgId, imgSrc) => {
+    console.log(`id: ${imgId}; source: ${imgSrc}`);
+
+    let newImages = [...images];
+    let image = newImages.filter((x) => x.id === imgId)[0];
+    image.turned = !image.turned;
+
+    setImages(newImages);
+
+    // let image = newImages.filter((x) => x.url === id)[0];
+    // image.turned = true;
   };
   return (
     <div className="App">
       <h1>Memory Titan</h1>
       <div className="cards">
-        {imgSrcs.map((x, index) => (
+        {images.map((x, index) => (
           <Card
-            key={x + index}
-            imgSrc={x}
-            onTurned={validate}
-            inactive={completedCard[x]}
+            key={x.id}
+            imgId={x.id}
+            imgSrc={x.url}
+            turned={x.turned}
+            onTurned={onTurned}
           />
         ))}
       </div>
     </div>
   );
+
+  function generateImageSources() {
+    let imgSrcs = [];
+    const imageCount = 2;
+    for (let i = 0; i < imageCount; i++) {
+      imgSrcs.push({
+        id: uuidv4(),
+        url: "https://loremflickr.com/200/200?v=" + i,
+        turned: false
+      });
+      imgSrcs.push({
+        id: uuidv4(),
+        url: "https://loremflickr.com/200/200?v=" + i,
+        turned: false
+      });
+    }
+
+    for (let i = imgSrcs.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * i);
+      const temp = imgSrcs[i];
+      imgSrcs[i] = imgSrcs[j];
+      imgSrcs[j] = temp;
+    }
+    setImages(imgSrcs);
+  }
 }
