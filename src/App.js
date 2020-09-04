@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import "./styles.css";
 import { v4 as uuidv4 } from "uuid";
-
 import Card from "./components/card/card";
 
 export default function App() {
@@ -14,8 +13,6 @@ export default function App() {
   };
 
   const onTurned = (imgId, imgSrc) => {
-    console.log(`id: ${imgId}; source: ${imgSrc}`);
-
     let newImages = [...images];
     let image = newImages.filter((x) => x.id === imgId)[0];
     if (image.matched) return;
@@ -24,18 +21,13 @@ export default function App() {
     setImages(newImages);
 
     let turnedImages = newImages.filter((x) => x.turned && !x.matched);
-    console.log(turnedImages);
 
     if (turnedImages.length === 2) {
-      setMoves(moves + 1);
-      console.log("validate them");
       let matched = turnedImages[0].url === turnedImages[1].url;
 
       if (matched) {
-        console.log("matched. do something");
         turnedImages.forEach((x) => (x.matched = true));
       } else {
-        console.log("not matched. flip them back");
         setTimeout(() => {
           let clean = [...images];
           for (let i = 0; i < clean.length; i++) {
@@ -48,12 +40,13 @@ export default function App() {
           setImages(clean);
         }, 1000);
       }
+      setMoves(moves + 1);
     }
   };
   return (
     <div className="App">
-      <h1>Memory Titan</h1>
-      <div>Moves = {moves}</div>
+      <h1>#Memory</h1>
+      <div>Moves = {moves}.</div>
       <button onClick={restart}>Restart</button>
       <div className="cards">
         {images.map((x, index) => (
@@ -71,7 +64,7 @@ export default function App() {
 
   function generateImageSources() {
     let imgSrcs = [];
-    const imageCount = 10;
+    const imageCount = 2;
     for (let i = 0; i < imageCount; i++) {
       let v = uuidv4();
       imgSrcs.push({
