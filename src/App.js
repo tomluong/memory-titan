@@ -1,14 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./styles.css";
 import { v4 as uuidv4 } from "uuid";
 
 import Card from "./components/card/card";
 
 export default function App() {
-  const [images, setImages] = useState([]);
-  useEffect(() => {
-    generateImageSources();
-  }, []);
+  const [images, setImages] = useState(generateImageSources());
+  const [moves, setMoves] = useState(0);
+
+  const restart = () => {
+    setMoves(0);
+    setImages(generateImageSources());
+  };
 
   const onTurned = (imgId, imgSrc) => {
     console.log(`id: ${imgId}; source: ${imgSrc}`);
@@ -24,6 +27,7 @@ export default function App() {
     console.log(turnedImages);
 
     if (turnedImages.length === 2) {
+      setMoves(moves + 1);
       console.log("validate them");
       let matched = turnedImages[0].url === turnedImages[1].url;
 
@@ -49,6 +53,8 @@ export default function App() {
   return (
     <div className="App">
       <h1>Memory Titan</h1>
+      <div>Moves = {moves}</div>
+      <button onClick={restart}>Restart</button>
       <div className="cards">
         {images.map((x, index) => (
           <Card
@@ -65,17 +71,18 @@ export default function App() {
 
   function generateImageSources() {
     let imgSrcs = [];
-    const imageCount = 2;
+    const imageCount = 10;
     for (let i = 0; i < imageCount; i++) {
+      let v = uuidv4();
       imgSrcs.push({
         id: uuidv4(),
-        url: "https://loremflickr.com/200/200?v=" + i,
+        url: "https://loremflickr.com/200/200?v=" + v,
         turned: false,
         matched: false
       });
       imgSrcs.push({
         id: uuidv4(),
-        url: "https://loremflickr.com/200/200?v=" + i,
+        url: "https://loremflickr.com/200/200?v=" + v,
         turned: false,
         matched: false
       });
@@ -87,6 +94,6 @@ export default function App() {
       imgSrcs[i] = imgSrcs[j];
       imgSrcs[j] = temp;
     }
-    setImages(imgSrcs);
+    return imgSrcs;
   }
 }
