@@ -13,36 +13,28 @@ export default function App() {
     else setImages(generateImageSources(3));
   };
 
-  const onTurned = (imageId, imgSrc) => {
+  const resetUnmatchedImages = () => {
     let _images = [...images];
-    // [start] turn the image
+    for (let i = 0; i < _images.length; i++) {
+      if (_images[i].matched) {
+        // ignore
+      } else {
+        _images[i].turned = false;
+      }
+    }
+    setImages(_images);
+  };
+  const turnImage = (imageId) => {
+    let _images = [...images];
     let selectedImage = _images.filter((image) => image.id === imageId)[0];
     if (selectedImage.matched) return;
     selectedImage.turned = !selectedImage.turned;
     setImages(_images);
-    // [end] turn the image
+  };
 
-    let turnedImages = _images.filter((x) => x.turned && !x.matched);
-    if (turnedImages.length === 2) {
-      let matched = turnedImages[0].url === turnedImages[1].url;
-
-      if (matched) {
-        turnedImages.forEach((x) => (x.matched = true));
-      } else {
-        setTimeout(() => {
-          let clean = [...images];
-          for (let i = 0; i < clean.length; i++) {
-            if (clean[i].matched) {
-              // ignore
-            } else {
-              clean[i].turned = false;
-            }
-          }
-          setImages(clean);
-        }, 1000);
-      }
-      setMoves(moves + 1);
-    }
+  const onTurned = (imageId, imgSrc) => {
+    turnImage(imageId);
+    validateImages();
   };
   return (
     <div className="App">
@@ -65,6 +57,21 @@ export default function App() {
       </div>
     </div>
   );
+
+  function validateImages() {
+    let _images = [...images];
+    let turnedImages = _images.filter((x) => x.turned && !x.matched);
+    if (turnedImages.length === 2) {
+      let matched = turnedImages[0].url === turnedImages[1].url;
+
+      if (matched) {
+        turnedImages.forEach((x) => (x.matched = true));
+      } else {
+        setTimeout(resetUnmatchedImages, 1000);
+      }
+      setMoves(moves + 1);
+    }
+  }
 
   function generateImageSources(imageCount) {
     let imgSrcs = [];
