@@ -4,24 +4,25 @@ import { v4 as uuidv4 } from "uuid";
 import Card from "./components/card/card";
 
 export default function App() {
-  const [images, setImages] = useState(generateImageSources());
+  const [images, setImages] = useState(generateImageSources(3));
   const [moves, setMoves] = useState(0);
 
-  const restart = () => {
+  const restart = (count) => {
     setMoves(0);
-    setImages(generateImageSources());
+    if (count) setImages(generateImageSources(count));
+    else setImages(generateImageSources(3));
   };
 
-  const onTurned = (imgId, imgSrc) => {
-    let newImages = [...images];
-    let image = newImages.filter((x) => x.id === imgId)[0];
-    if (image.matched) return;
-    image.turned = !image.turned;
+  const onTurned = (imageId, imgSrc) => {
+    let _images = [...images];
+    // [start] turn the image
+    let selectedImage = _images.filter((image) => image.id === imageId)[0];
+    if (selectedImage.matched) return;
+    selectedImage.turned = !selectedImage.turned;
+    setImages(_images);
+    // [end] turn the image
 
-    setImages(newImages);
-
-    let turnedImages = newImages.filter((x) => x.turned && !x.matched);
-
+    let turnedImages = _images.filter((x) => x.turned && !x.matched);
     if (turnedImages.length === 2) {
       let matched = turnedImages[0].url === turnedImages[1].url;
 
@@ -47,7 +48,10 @@ export default function App() {
     <div className="App">
       <h1>#Memory</h1>
       <div>Moves = {moves}.</div>
-      <button onClick={restart}>Restart</button>
+      <button onClick={() => restart(3)}>3 images</button>
+      <button onClick={() => restart(5)}>5 images</button>
+      <button onClick={() => restart(7)}>7 images</button>
+      <button onClick={() => restart()}>Restart</button>
       <div className="cards">
         {images.map((x, index) => (
           <Card
@@ -62,20 +66,20 @@ export default function App() {
     </div>
   );
 
-  function generateImageSources() {
+  function generateImageSources(imageCount) {
     let imgSrcs = [];
-    const imageCount = 2;
     for (let i = 0; i < imageCount; i++) {
       let v = uuidv4();
+      const url = "https://loremflickr.com/200/200?v=" + v;
       imgSrcs.push({
         id: uuidv4(),
-        url: "https://loremflickr.com/200/200?v=" + v,
+        url: url,
         turned: false,
         matched: false
       });
       imgSrcs.push({
         id: uuidv4(),
-        url: "https://loremflickr.com/200/200?v=" + v,
+        url: url,
         turned: false,
         matched: false
       });
