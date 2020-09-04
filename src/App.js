@@ -10,23 +10,6 @@ export default function App() {
     generateImageSources();
   }, []);
 
-  // const validate = (id) => {
-  //   console.log("validate card: " + id);
-
-  //   if (turnedCard === "") {
-  //     turnedCard = id;
-  //   } else {
-  //     if (turnedCard === id) {
-  //       console.log("matched");
-  //       let temp = {};
-  //       temp[id] = true;
-  //       setCompleteCard(Object.assign(temp, completedCard));
-  //     } else {
-  //       console.log("not matched");
-  //     }
-  //   }
-  // };
-
   const onTurned = (imgId, imgSrc) => {
     console.log(`id: ${imgId}; source: ${imgSrc}`);
 
@@ -49,8 +32,6 @@ export default function App() {
         turnedImages.forEach((x) => (x.matched = true));
       } else {
         console.log("not matched. flip them back");
-        //
-        //setImages(newImages);
         setTimeout(() => {
           let clean = [...images];
           let noMatchImages = clean.filter((x) => x.turned && !x.matched);
@@ -59,9 +40,6 @@ export default function App() {
         }, 1000);
       }
     }
-
-    // let image = newImages.filter((x) => x.url === id)[0];
-    // image.turned = true;
   };
   return (
     <div className="App">
