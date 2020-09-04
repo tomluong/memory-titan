@@ -34,8 +34,13 @@ export default function App() {
         console.log("not matched. flip them back");
         setTimeout(() => {
           let clean = [...images];
-          let noMatchImages = clean.filter((x) => x.turned && !x.matched);
-          noMatchImages.turned = false;
+          for (let i = 0; i < clean.length; i++) {
+            if (clean[i].matched) {
+              // ignore
+            } else {
+              clean[i].turned = false;
+            }
+          }
           setImages(clean);
         }, 1000);
       }
