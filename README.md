@@ -2,6 +2,8 @@
 
 ### [Live Site](https://tuphj.csb.app/)
 
+![Memory Training Game](https://i.ibb.co/vc6mpSQ/Annotation-2020-09-08-111819.png)
+
 ## Introduction
 
 This is a simple app for improving your memory.
